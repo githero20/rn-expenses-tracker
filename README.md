@@ -1,4 +1,4 @@
-# Meals App
+# Expense Tracker
 
 ## Description
 
