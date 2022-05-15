@@ -87,7 +87,7 @@ const expensesReducer = (state: any, action: any) => {
         (expense: any) => expense.id === action.payload.id
       );
       const updatableExpense = state[updatableExpenseIndex];
-      // we use the id to get the old, actual expense
+      // we use the index in the array to get the old, actual expense
       const updatedItem = { ...updatableExpense, ...action.payload.data };
       // we create an updatedItem with the old expense and the new data
       const updatedExpenses = [...state];

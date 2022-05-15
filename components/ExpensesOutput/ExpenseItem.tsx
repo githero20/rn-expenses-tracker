@@ -5,20 +5,26 @@ import { GlobalStyles } from "../../constants/styles";
 import { View, StyleSheet, Text, Pressable } from "react-native";
 import { getFormattedDate } from "../../util/date";
 
-export type Props = {
-  id: string;
+export type ExpenseItemTypes = {
+  id?: string;
   description: string;
   amount: number;
   date: Date;
 };
 
-const ExpenseItem: React.FC<Props> = ({ id, description, amount, date }) => {
+const ExpenseItem: React.FC<ExpenseItemTypes> = ({
+  id,
+  description,
+  amount,
+  date,
+}) => {
   const navigation = useNavigation();
 
   const expensePressHandler = () => {
-    navigation.navigate("ManageExpense", {
-      expenseId: id,
-    });
+    id &&
+      navigation.navigate("ManageExpense", {
+        expenseId: id,
+      });
   };
 
   return (

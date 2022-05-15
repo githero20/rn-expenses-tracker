@@ -10,7 +10,7 @@ import RecentExpenses from "./screens/RecentExpenses";
 
 import { GlobalStyles } from "./constants/styles";
 import IconButton from "./components/UI/IconButton";
-// import { ExpensesContextProvider } from "./store/context/expenses-context";
+import { ExpensesContextProvider } from "./store/context/expenses-context";
 import { Provider } from "react-redux";
 import { store } from "./store/redux/store";
 
@@ -79,9 +79,9 @@ const ExpensesOverview = () => {
 export default function App() {
   return (
     <>
-      <StatusBar style="auto" />
-      {/* <ExpensesContextProvider> */}
-      <Provider store={store}>
+      <StatusBar style="light" />
+      <ExpensesContextProvider>
+        {/* <Provider store={store}> */}
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName="ExpensesOverview"
@@ -106,9 +106,8 @@ export default function App() {
             />
           </Stack.Navigator>
         </NavigationContainer>
-      </Provider>
-
-      {/* </ExpensesContextProvider> */}
+        {/* </Provider> */}
+      </ExpensesContextProvider>
     </>
   );
 }

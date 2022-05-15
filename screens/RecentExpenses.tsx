@@ -1,4 +1,4 @@
-import { useContext } from "react";
+// import { useContext } from "react";
 
 import ExpensesOutput from "../components/ExpensesOutput/ExpensesOutput";
 // import { ExpensesContext } from "../store/context/expenses-context";
@@ -28,7 +28,11 @@ const RecentExpenses = () => {
   });
 
   return (
-    <ExpensesOutput expenses={recentExpenses} expensesPeriod="Last 7 Days" />
+    <ExpensesOutput
+      expenses={recentExpenses}
+      expensesPeriod="Last 7 Days"
+      fallbackText="No expenses found from the past 7 days."
+    />
   );
 };
 
