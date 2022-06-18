@@ -1,12 +1,16 @@
-import { useContext, useLayoutEffect } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import { StyleSheet, View, Text, TextInput } from "react-native";
 import { ExpenseItemTypes } from "../components/ExpensesOutput/ExpenseItem";
 
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
-import Button from "../components/UI/Button";
+// import Button from "../components/UI/Button";
+import ErrorOverlay from "../components/UI/ErrorOverlay";
 import IconButton from "../components/UI/IconButton";
+import LoadingOverlay from "../components/UI/LoadingOverlay";
 import { GlobalStyles } from "../constants/styles";
 import { ExpensesContext } from "../store/context/expenses-context";
+// import { updateExpense, deleteExpense } from "../store/redux/expensesSlice";
+import { deleteExpenseAx, storeExpense, updateExpenseAx } from "../util/http";
 
 type ExpenseDataTypes = {
   description: string;
@@ -15,6 +19,9 @@ type ExpenseDataTypes = {
 };
 
 const ManageExpense = ({ route, navigation }: any) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isError, setIsError] = useState<null | string>(null);
+
   const expenseCtx = useContext(ExpensesContext);
 
   const editedExpenseId = route.params?.expenseId;
@@ -34,17 +41,41 @@ const ManageExpense = ({ route, navigation }: any) => {
   //   remember with useLayoutEffect, the data will change while the page is being rendered.
   //   Unlike UseEffect that waits till after.
 
-  const deleteExpenseHandler = () => {
-    expenseCtx.deleteExpense(editedExpenseId);
-    navigation.goBack();
+  const deleteExpenseHandler = async () => {
+    setIsSubmitting(true);
+    try {
+      await deleteExpenseAx(editedExpenseId);
+      expenseCtx.deleteExpense(editedExpenseId);
+      navigation.goBack();
+    } catch (error) {
+      setIsError("Could not delete your expense. Please try again later.");
+      setIsSubmitting(false);
+    }
   };
 
-  const confirmHandler = (expenseData: any) => {
-    isEditing
-      ? expenseCtx.updateExpense(editedExpenseId, expenseData)
-      : expenseCtx.addExpense(expenseData);
-    navigation.goBack();
+  // transformed the function to async, await because storeExpense returns a promise
+  const confirmHandler = async (expenseData: any) => {
+    setIsSubmitting(true);
+    try {
+      if (isEditing) {
+        await updateExpenseAx(editedExpenseId, expenseData);
+        expenseCtx.updateExpense(editedExpenseId, expenseData);
+      } else {
+        const trueId = await storeExpense(expenseData);
+        expenseCtx.addExpense({ id: trueId, ...expenseData });
+      }
+      navigation.goBack();
+    } catch (error) {
+      setIsError("Could not update your expense. Please try again later.");
+    }
   };
+  // const confirmHandler = (expenseData: any) => {
+  //   isEditing
+  //     ? expenseCtx.updateExpense(editedExpenseId, expenseData)
+  //     : (storeExpense(expenseData), expenseCtx.addExpense(expenseData));
+  //   navigation.goBack();
+  // };
+
   // const confirmHandler = (expenseData: any) => {
   //   isEditing
   //     ? expenseCtx.updateExpense(editedExpenseId,
@@ -65,6 +96,16 @@ const ManageExpense = ({ route, navigation }: any) => {
   const cancelHandler = () => {
     navigation.goBack();
   };
+
+  if (isSubmitting) return <LoadingOverlay />;
+
+  if (isError && !isSubmitting)
+    return (
+      <ErrorOverlay
+        message={isError && isError}
+        // same as: onConfirm={() => errorHandler()}
+      />
+    );
 
   return (
     <View style={styles.container}>

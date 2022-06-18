@@ -80,28 +80,31 @@ const ExpenseForm = ({
     <View style={styles.form}>
       <Text style={styles.title}>Your Expense</Text>
       <View style={styles.inputsRow}>
-        <Input
-          style={styles.rowInput}
-          label="Amount"
-          invalid={!inputs.amount.isValid}
-          textInputConfig={{
-            keyboardType: "decimal-pad",
-            onChangeText: inputChangeHandler.bind(this, "amount"),
-            value: inputs["amount"]["value"],
-            // same as inputs.amount.value, using Array notation instead of object notation
-          }}
-        />
-        <Input
-          style={styles.rowInput}
-          label="Date"
-          invalid={!inputs.date.isValid}
-          textInputConfig={{
-            placeholder: "YYYY-MM-DD",
-            maxLength: 10,
-            onChangeText: inputChangeHandler.bind(this, "date"),
-            value: inputs.date.value,
-          }}
-        />
+        <View style={styles.amtDateRow}>
+          <Input
+            style={styles.rowInput}
+            label="Amount"
+            invalid={!inputs.amount.isValid}
+            textInputConfig={{
+              keyboardType: "decimal-pad",
+              onChangeText: inputChangeHandler.bind(this, "amount"),
+              value: inputs["amount"]["value"],
+              // same as inputs.amount.value, using Array notation instead of object notation
+            }}
+          />
+          <Input
+            style={styles.rowInput}
+            label="Date"
+            invalid={!inputs.date.isValid}
+            textInputConfig={{
+              placeholder: "YYYY-MM-DD",
+              maxLength: 10,
+              onChangeText: inputChangeHandler.bind(this, "date"),
+              value: inputs.date.value,
+            }}
+          />
+        </View>
+
         <Input
           label="Description"
           invalid={!inputs.description.isValid}
@@ -143,8 +146,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   inputsRow: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
+  },
+  amtDateRow: {
+    flexDirection: "row",
+    // justifyContent: "space-between",
   },
   rowInput: {
     flex: 1,

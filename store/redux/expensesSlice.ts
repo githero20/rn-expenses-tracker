@@ -59,13 +59,13 @@ const DUMMY_EXPENSES = [
 ];
 
 export interface ExpensesState {
-  id: string;
+  id?: string;
   description: string;
   amount: number;
   date: Date;
 }
 
-const initialState: ExpensesState[] = DUMMY_EXPENSES;
+const initialState: ExpensesState[] = [];
 
 // lmao this is a lot easier than using the Context API, and one reason is Immer.
 
@@ -77,8 +77,16 @@ export const expensesSlice = createSlice({
       state: ExpensesState[],
       action: PayloadAction<ExpensesState>
     ) => {
-      const index = new Date().toString() + Math.random().toString();
-      state.push({ ...action.payload, id: index });
+      // const index = new Date().toString() + Math.random().toString();
+      // state.push({ ...action.payload, id: index });
+      state.push(action.payload);
+    },
+    setExpenses: (
+      state: ExpensesState[],
+      action: PayloadAction<ExpensesState[]>
+    ) => {
+      const inverted = action.payload.reverse();
+      return action.payload;
     },
     deleteExpense: (state: ExpensesState[], action: PayloadAction<string>) => {
       state.filter((expense: ExpensesState) => expense.id !== action.payload);
@@ -102,7 +110,7 @@ export const expensesSlice = createSlice({
   },
 });
 
-export const { addExpense, deleteExpense, updateExpense } =
+export const { addExpense, setExpenses, deleteExpense, updateExpense } =
   expensesSlice.actions;
 
 export const selectAllExpenses = (state: RootState) => state.expenses;
