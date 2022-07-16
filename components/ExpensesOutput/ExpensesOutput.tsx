@@ -37,10 +37,12 @@ const styles = StyleSheet.create({
     backgroundColor: GlobalStyles.colors.primary700,
   },
   infoText: {
-    color: "white",
+    // color: "white",
     fontSize: 16,
     textAlign: "center",
     marginTop: 32,
+    fontWeight: "bold",
+    color: GlobalStyles.colors.primary500,
   },
 });
 

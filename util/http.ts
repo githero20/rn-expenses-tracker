@@ -1,8 +1,8 @@
 import axios from "axios";
 import { ExpenseItemTypes } from "../components/ExpensesOutput/ExpenseItem";
 
-const backendUrl: string =
-  process.env.BACKEND_URL ||
+const backendUrl: string | undefined =
+  process.env.REACT_APP_BACKEND_URL ||
   "https://rn-expense-tracker-d97fb-default-rtdb.firebaseio.com";
 // firebase requires that you always store your files in json format, hence the addition of .json
 
@@ -18,6 +18,7 @@ export const fetchExpenses = async (): Promise<ExpenseItemTypes[]> => {
   const res = await axios.get(backendUrl + "/expenses.json");
 
   const expenses: ExpenseItemTypes[] = [];
+  console.log(expenses);
 
   for (const key in res.data) {
     // key: the unique ID/name for every object in the firebase db
@@ -33,6 +34,17 @@ export const fetchExpenses = async (): Promise<ExpenseItemTypes[]> => {
 
   return expenses;
 };
+
+const getExpenses = async () => {
+  try {
+    const expenses = await fetchExpenses();
+    // dispatch(setExpenses(expenses));
+  } catch (error) {
+    console.log("Error");
+  }
+};
+
+getExpenses();
 
 export const updateExpenseAx = (id: string, expenseData: ExpenseItemTypes) => {
   return axios.put(backendUrl + `/expenses/${id}.json`, expenseData);
